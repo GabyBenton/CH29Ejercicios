@@ -39,6 +39,7 @@ btn1.addEventListener("click",function(event){
 }); //boton 1
 
 
+
 btn2.addEventListener("click",function(event){
     event.preventDefault();
     textito.value = textito.value.trim();
