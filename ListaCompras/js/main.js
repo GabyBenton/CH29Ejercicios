@@ -17,7 +17,9 @@ let precio = 0;
 let isValid = true;
 let costoTotal = 0;
 let totalEnProductos = 0;
-let datos = new Array(); //Aqui vamos a almacenar los elementos de la tabla
+
+let datos = [];
+//new Array(); //Aqui vamos a almacenar los elementos de la tabla
 
 btnClear.addEventListener("click",function(event){
     event.preventDefault();
@@ -33,6 +35,9 @@ btnClear.addEventListener("click",function(event){
     costoTotal =0;
     totalEnProductos=0;
     datos = [];
+    //localStorage.clear();
+    localStorage.removeItem("resumen");
+    localStorage.removeItem("datos");
 });//boton clear
 
 
@@ -56,23 +61,23 @@ function getPrecio(){
 }//get precio
 
 btnAgregar.addEventListener("click",function(event){
+    event.preventDefault();
     isValid = true;
     alertValidacionesTexto.innerHTML="";
     alertValidaciones.style.display="none";
     txtNombre.style.border="";
-    txtNumber.style.border="";
-    event.preventDefault();
+    txtNumber.style.border="";  
     txtNombre.value = txtNombre.value.trim();
     txtNumber.value = txtNumber.value.trim();
 
     if(txtNombre.value.length<3){
-        alertValidacionesTexto.insertAdjacentHTML("afterbegin",`El <strong>Nombre</strong> no es correcto.<br/>`);
+        alertValidacionesTexto.insertAdjacentHTML("beforeend",`El <strong>Nombre</strong> no es correcto.<br/>`);
         alertValidaciones.style.display="block";
         txtNombre.style.border="solid thin red";
         isValid=false;
     }//if nombre.length
     if(! validarCantidad()){
-        alertValidacionesTexto.insertAdjacentHTML("afterbegin",`La <strong>Cantidad</strong> no es correcta.<br/>`);
+        alertValidacionesTexto.insertAdjacentHTML("beforeend",`La <strong>Cantidad</strong> no es correcta.<br/>`);
         alertValidaciones.style.display="block";
         txtNumber.style.border="solid thin red";
         isValid=false;
@@ -86,13 +91,14 @@ btnAgregar.addEventListener("click",function(event){
             <td>${contador}</td>
             <td>${txtNombre.value}</td>
             <td>${txtNumber.value}</td>
-            <td>${precio}</td>
+            <td>$ ${precio}</td>
         </tr>`;
 
         let elemento = `{"id"      :  ${contador},
                         "nombre"   : "${txtNombre.value}",
                         "cantidad" : "${txtNumber.value}",
                         "precio"   : "${precio}"}`;
+
         datos.push(JSON.parse(elemento));
         console.log(datos);
         localStorage.setItem("datos",JSON.stringify(datos));
@@ -129,10 +135,11 @@ window.addEventListener("load",function(event){
     event.preventDefault();
     if(this.localStorage.getItem("resumen")!=null){
         let res = JSON.parse(this.localStorage.getItem("resumen"));
-        contador=parseInt(this.localStorage.getItem("contador"));
-        costoTotal=parseFloat(this.localStorage.getItem("costoTotal"));
-        totalEnProductos=parseInt(this.localStorage.getItem("totalEnProductos"));
-    }
+        contador=parseInt(res.contador);
+        costoTotal=parseFloat(res.costoTotal);
+        totalEnProductos=parseInt(res.totalEnProductos);
+    }//resumen
+
     contadorProductos.innerText=contador;
     productosTotal.innerText = totalEnProductos;
     precioTotal.innerText= `$ ${costoTotal.toFixed(2)}`;
@@ -150,7 +157,7 @@ window.addEventListener("load",function(event){
                 cuerpoTabla[0].insertAdjacentHTML("beforeend",row);
         }//foreach
         );  
-    }
+    }//if datos
 
 });
 
