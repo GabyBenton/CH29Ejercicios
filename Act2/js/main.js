@@ -75,3 +75,15 @@ function trabajo(yearDayNumber2,hourNumber2){
 }
 
 console.log(trabajo(72,17));
+
+
+function maximo(num1,num2){
+    if(num1<num2){
+        console.log("El numero mayor es: ",num2);
+    }else if(num1>num2){
+        console.log("El numero mayor es: ",num1);
+    }else{
+        console.log("los números son iguales");
+    }
+    return maximo(num1,num2);
+}
